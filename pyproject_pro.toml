@@ -1,0 +1,21 @@
+[project]
+name = "cubix-data-engineer-capstone"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "SZABGAB",email = "gabor.szabo@allianz.com"}
+]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pyspark = "^3.5.4"
+numpy = "^1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+pyarrow = "^19.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
