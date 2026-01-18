@@ -7,15 +7,24 @@ authors = [
 ]
 readme = "README.md"
 requires-python = ">=3.11"
+dependencies = [
+    "pyspark (>=3.5.4)",
+    "numpy (>=1)"
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-pyspark = "^3.5.4"
-numpy = "^1"
+[project.optional.dependencies]
+delta = ["delta-spark (>=3.3.0)"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
 pyarrow = "^19.0.0"
+pre-commit = "^4.0.1"
+pandas = "^2.2.3"
+
+[tool.pytest.ini_options]
+testpaths = ["./tests"]
+filterwarnings = ["ignore::DeprecationWarning"]
+addopts = "--disable-warnings -p no:warnings"
 
 [build-system]
 requires = ["poetry-core"]
