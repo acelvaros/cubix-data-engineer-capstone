@@ -19,7 +19,7 @@ def bronze_ingest(
     :param partition_by: Column(s) to partition on. "None" by default.
     """
     df = read_file_from_datalake(container_name, f"{source_path}/{file_name}", format)
-    
+
     return write_file_to_datalake(
         df=df,
         container_name=container_name,

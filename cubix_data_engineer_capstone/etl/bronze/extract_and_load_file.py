@@ -12,7 +12,7 @@ def bronze_ingest_volume(
     :param partition_by: Column(s) to partition on. "None" by default.
     """
     df = read_file_from_volume(f"{source_path}/{file_name}", "csv")
-    
+
     return write_file_to_volume(
         df=df,
         full_path=f"{bronze_path}/{file_name}",
