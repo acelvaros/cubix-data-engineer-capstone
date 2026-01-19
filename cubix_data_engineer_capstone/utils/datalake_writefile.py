@@ -1,4 +1,4 @@
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import DataFrame
 
 from cubix_data_engineer_capstone.utils.config import STORAGE_ACCOUNT_NAME
 
@@ -25,7 +25,7 @@ def write_file_to_datalake(
     writer = df.write.mode(mode).format(format)
     if format == "csv":
         writer= writer.option("header", True)
-    
+
     if partition_by:
         writer= writer.partitionBy(*partition_by)
 
