@@ -5,7 +5,8 @@ from pytest import fixture
 SPARK = (
     SparkSession
     .builder
-    .master("local")
+    .master("local[*]")
+    #.master("local[*]")
     .appName("localTests")
     .getOrCreate()
 )
