@@ -35,7 +35,7 @@ def test_get_calendar(spark):
         ]
     )
 
-    results = get_calendar(test_data)
+    result = get_calendar(test_data)
 
     excpected_schema = st.StructType(
         [
