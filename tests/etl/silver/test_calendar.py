@@ -60,7 +60,7 @@ def test_get_calendar(spark):
     excpected = spark.createDataFrame(
         [
             (
-                datetime(2017, 1,1),
+                datetime(2017, 1, 1),
                 7,
                 "Sunday",
                 "January",
