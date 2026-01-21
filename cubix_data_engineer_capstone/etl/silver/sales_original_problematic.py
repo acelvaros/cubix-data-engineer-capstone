@@ -18,8 +18,7 @@ def get_sales(sales_raw: DataFrame) -> DataFrame:
 
     """
 
-    # Select and cast the columns
-    sales_mapped = (
+    return(
         sales_raw
         .select(
             sf.col("son"),
@@ -29,11 +28,6 @@ def get_sales(sales_raw: DataFrame) -> DataFrame:
             sf.col("dateofshipping").cast("date"),
             sf.col("oquantity").cast("int"),
         )
+        .withColumnRenamed(SALES_MAPPING)
+        .dropDuplicates()
     )
-
-    # Rename columns according to SALES_MAPPING
-    for old_name, new_name in SALES_MAPPING.items():
-        sales_mapped = sales_mapped.withColumnRenamed(old_name, new_name)
-
-    # Drop duplicates
-    return sales_mapped.dropDuplicates()

@@ -12,9 +12,9 @@ def test_get_sales(spark):
     test_data = spark.createDataFrame(
         [
             # include - samle to keep
-            ("son_1", "2023-01-01", "1", "1", "1", "2023-01-06", "1", "extra_value")
+            ("son_1", "2023-01-01", "1", "1", "2023-01-06", "1", "extra_value"),
             # exclude - duplicate
-            ("son_1", "2023-01-01", "1", "1", "1", "2023-01-06", "1", "extra_value")
+            ("son_1", "2023-01-01", "1", "1", "2023-01-06", "1", "extra_value")
         ],
         schema=[
             "son",
@@ -36,7 +36,7 @@ def test_get_sales(spark):
             st.StructField("ProductKey",  st.IntegerType(), True),
             st.StructField("CustomerKey",  st.IntegerType(), True),
             st.StructField("ShipDate", st.DateType(), True),
-            st.StructField("OrderQuantity", st.IntegerType(), True)
+            st.StructField("OrderQuantity", st.IntegerType(), True),
         ]
     )
 
