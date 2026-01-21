@@ -1,54 +1,51 @@
-from datetime import datetime
+from decimal import Decimal
 
 import pyspark.sql.types as st
 import pyspark.testing as spark_testing
-from cubix_data_engineer_capstone.etl.silver.sales import get_sales
+from cubix_data_engineer_capstone.etl.silver.product_subcategory import get_product_subcategory
 
-def test_get_sales(spark):
+def test_get_product_subcategory(spark):
     """
-    Positive test that the function get_sales returns the expected DataFrame
+    Positive test that the function get_product_subcategory returns the expected DataFrame
     """
 
     test_data = spark.createDataFrame(
         [
             # include - samle to keep
-            ("son_1", "2023-01-01", "1", "1", "2023-01-06", "1", "extra_value"),
+            ("1", "1", "english_name_1", "spanish_1", "french_name_1", "extra_value"),
             # exclude - duplicate
-            ("son_1", "2023-01-01", "1", "1", "2023-01-06", "1", "extra_value")
+            ("1", "1", "english_name_1", "spanish_1", "french_name_1", "extra_value")
         ],
         schema=[
-            "son",
-            "orderdate",
-            "pk",
-            "ck",
-            "dateofshipping",
-            "oquantity",
+            "psk",
+            "pck",
+            "epsn",
+            "spsn",
+            "fpsn",
             "extra_col"
         ]
     )
 
-    result = get_sales(test_data)
+    result = get_product_subcategory(test_data)
 
     excpected_schema = st.StructType(
         [
-            st.StructField("SalesOrderNumber", st.StringType(), True),
-            st.StructField("OrderDate", st.DateType(), True),
-            st.StructField("ProductKey",  st.IntegerType(), True),
-            st.StructField("CustomerKey",  st.IntegerType(), True),
-            st.StructField("ShipDate", st.DateType(), True),
-            st.StructField("OrderQuantity", st.IntegerType(), True),
+            st.StructField("ProductKey", st.IntegerType(), True),
+            st.StructField("ProductSubCategoryKey", st.IntegerType(), True),
+            st.StructField("EnglishProductSubcategoryName", st.StringType(), True),
+            st.StructField("SpanishProductSubcategoryName", st.StringType(), True),
+            st.StructField("FrenchProductSubcategoryName", st.StringType(), True)
         ]
     )
 
     excpected = spark.createDataFrame(
         [
             (
-                "son_1",
-                datetime(2023, 1, 1),
                 1,
                 1,
-                datetime(2023, 1, 6),
-                1
+                "english_name_1",
+                "spanish_1",
+                "french_name_1"
             )
         ],
         schema=excpected_schema

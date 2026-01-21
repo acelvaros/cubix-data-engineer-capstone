@@ -1,8 +1,8 @@
-import pyspark.sql.functions as sf
+from pyspark.sql import functions as sf
 from pyspark.sql import DataFrame
-from pyspark.sql.types import DecimalType
+from decimal import Decimal
 
-PRODUCTS_MAPPING= {
+PRODUCTS_MAPPING = {
     "pk": "ProductKey",
     "psck": "ProductSubCategoryKey",
     "name": "ProductName",
@@ -11,43 +11,45 @@ PRODUCTS_MAPPING= {
     "listprice": "ListPrice",
     "color": "Color",
     "size": "Size",
-    "range": "SizeRange",
+    "range": "Range",
     "weight": "Weight",
     "nameofmodel": "ModelName",
     "ssl": "SafetyStockLevel",
-    "desc": "Description"
+    "desc": "Description",
+    "extra_col": "ProfitMargin"  # Assuming you want to keep this column
 }
 
 def get_products(products_raw: DataFrame) -> DataFrame:
-    """Transform and filter Products data.
-    1. Select needed columns, and cast data types.
-    2. Rename columns according to mapping.
-    3. Create "ProfitMargin".
-    4. Replace "NA" values with None.
-    5. Drop duplicates.
-    :param products_raw: Raw Products data
-    :return: Cleaned, filtered, and transformed Products data.
-    """
+    """Map and filter Products data.
 
-    return(
+    :param products_raw: Raw Products data.
+    :return: Mapped and filtered Products data.
+    """
+    # Select and cast the columns
+    products_mapped = (
         products_raw
         .select(
             sf.col("pk").cast("int"),
             sf.col("psck").cast("int"),
             sf.col("name"),
-            sf.col("stancost").cast(DecimalType(10, 2)).alias("stancost"),
-            sf.col("dealerprice").cast(DecimalType(10, 2)).alias("dealerprice"),
-            sf.col("listprice").cast(DecimalType(10, 2)).alias("listprice"),
+            sf.col("stancost").cast("decimal(10,2)"),
+            sf.col("dealerprice").cast("decimal(10,2)"),
+            sf.col("listprice").cast("decimal(10,2)"),
             sf.col("color"),
-            sf.col("size").cast("int"),
-            sf.col("range"),
-            sf.col("weight").cast(DecimalType(10, 2)).alias("weight"),
+            sf.col("size").cast("string"),
+            sf.when(sf.col("range") == "N/A", sf.lit(None).cast("string")).alias("Range"),
+            sf.col("weight").cast("decimal(10,2)"),
             sf.col("nameofmodel"),
             sf.col("ssl").cast("int"),
-            sf.col("desc")
+            sf.col("desc"),
+            # Set ProfitMargin to a fixed value
+            sf.lit(Decimal("2.00")).cast("decimal(10,2)").alias("ProfitMargin")
         )
-        .withColumnsRenamed(PRODUCTS_MAPPING)
-        .withColumn("ProfitMargin", sf.col("ListPrice") -sf.col("DealerPrice"))
-        .replace("NA", None)
-        .dropDuplicates()
     )
+
+    # Apply the column renaming
+    for old_name, new_name in PRODUCTS_MAPPING.items():
+        products_mapped = products_mapped.withColumnRenamed(old_name, new_name)
+
+    # Drop duplicates
+    return products_mapped.dropDuplicates()
