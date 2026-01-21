@@ -14,7 +14,7 @@ CUSTOMERS_MAPPING= {
     "nco": "NumberCarsOwned",
     "addr1": "AddressLine1",
     "addr2": "AddressLine2",
-    "phone": "Phone",
+    "phone": "Phone"
 }
 
 def get_customers(customers_raw: DataFrame) -> DataFrame:
@@ -23,8 +23,8 @@ def get_customers(customers_raw: DataFrame) -> DataFrame:
     2. Apply the column name mapping.
     3. Transform MaritalStatus.
     4. Transform Gender.
-    5. Create FullAddresscolumn.
-    6. Create IncomeCategorycolumn.
+    5. Create FullAddress column.
+    6. Create IncomeCategory column.
     7. Create BithYearcolumn.
     8. Drop duplicates.
     :param customers_raw: Raw Customers data
@@ -51,14 +51,14 @@ def get_customers(customers_raw: DataFrame) -> DataFrame:
     .withColumnsRenamed(CUSTOMERS_MAPPING)
         .withColumn(
             "MaritalStatus",
-            sf.when(sf.col("MaritalStatus") =="M", 1)
-            .when(sf.col("MaritalStatus") =="S", 0)
+            sf.when(sf.col("MaritalStatus") == "M", 1)
+            .when(sf.col("MaritalStatus") == "S", 0)
             .otherwise(None)
             .cast("int")
         )
         .withColumn(
             "Gender",
-            sf.when(sf.col("Gender") =="M", 1)
+            sf.when(sf.col("Gender") == "M", 1)
             .when(sf.col("Gender") =="F", 0)
             .otherwise(None)
             .cast("int")
