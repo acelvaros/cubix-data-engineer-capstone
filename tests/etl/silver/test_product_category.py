@@ -10,18 +10,17 @@ def test_get_product_category(spark):
     test_data = spark.createDataFrame(
         [
             # include - samle to keep
-            ("1", "1", "Bikes", "Bicicleta", "Vélo", "extra_value"),
+            ("1", "Bikes", "Bicicleta", "Vélo", "extra_value"),
             # exclude - duplicate
-            ("1", "1", "Bikes", "Bicicleta", "Vélo", "extra_value"),
+            ("1", "Bikes", "Bicicleta", "Vélo", "extra_value"),
             # include - unmodified values
-            ("2", "2", "Components", "Componente", "Composant", "extra_value"),
-            ("3", "3", "Clothing", "Prenda", "Vêtements", "extra_value"),
-            ("4", "4", "Accessories", "Accesorio", "Accessoire", "extra_value"),
+            ("2", "Components", "Componente", "Composant", "extra_value"),
+            ("3", "Clothing", "Prenda", "Vêtements", "extra_value"),
+            ("4", "Accessories", "Accesorio", "Accessoire", "extra_value"),
 
         ],
         schema=[
             "pck",
-            "pcak",
             "epcn",
             "spcn",
             "fpcn",
@@ -33,7 +32,6 @@ def test_get_product_category(spark):
 
     excpected_schema = st.StructType(
         [
-            st.StructField("ProductKey", st.IntegerType(), True),
             st.StructField("ProductCategoryKey", st.IntegerType(), True),
             st.StructField("EnglishProductCategoryName", st.StringType(), True),
             st.StructField("SpanishProductCategoryName", st.StringType(), True),
@@ -45,13 +43,11 @@ def test_get_product_category(spark):
         [
             (
                 1,
-                1,
                 "Bikes",
                 "Bicicleta",
                 "Vélo"
             ),
             (
-                2,
                 2,
                 "Components",
                 "Componente",
@@ -59,13 +55,11 @@ def test_get_product_category(spark):
             ),
             (
                 3,
-                3,
                 "Clothing",
                 "Prenda",
                 "Vêtements"
             ),
             (
-                4,
                 4,
                 "Accessories",
                 "Accesorio",
