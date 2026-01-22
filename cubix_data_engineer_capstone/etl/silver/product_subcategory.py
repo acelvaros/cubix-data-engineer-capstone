@@ -2,11 +2,11 @@ from pyspark.sql import functions as sf
 from pyspark.sql import DataFrame
 
 PRODUCT_SUBCATEGORY_MAPPING = {
-    "psk": "ProductKey",  # Correct mapping to match expected schema
-    "pck": "ProductSubCategoryKey",
+    "psk": "ProductSubcategoryKey", # Correct mapping to match expected schema
+    "pck": "ProductCategoryKey",
     "epsn": "EnglishProductSubcategoryName",
     "spsn": "SpanishProductSubcategoryName",
-    "fpsn": "FrenchProductSubcategoryName"
+    "fpsn": "FrenchProductSubcategoryName",
 }
 
 def get_product_subcategory(products_subcategory_raw: DataFrame) -> DataFrame:

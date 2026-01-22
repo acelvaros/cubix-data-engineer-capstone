@@ -10,9 +10,9 @@ def test_get_product_subcategory(spark):
     test_data = spark.createDataFrame(
         [
             # include - samle to keep
-            ("1", "1", "english_name_1", "spanish_1", "french_name_1", "extra_value"),
+            ("1", "1", "english_name_1", "spanish_name_1", "french_name_1", "extra_value"),
             # exclude - duplicate
-            ("1", "1", "english_name_1", "spanish_1", "french_name_1", "extra_value")
+            ("1", "1", "english_name_1", "spanish_name_1", "french_name_1", "extra_value")
         ],
         schema=[
             "psk",
@@ -28,8 +28,8 @@ def test_get_product_subcategory(spark):
 
     excpected_schema = st.StructType(
         [
-            st.StructField("ProductKey", st.IntegerType(), True),
-            st.StructField("ProductSubCategoryKey", st.IntegerType(), True),
+            st.StructField("ProductSubcategoryKey", st.IntegerType(), True),
+            st.StructField("ProductCategoryKey", st.IntegerType(), True),
             st.StructField("EnglishProductSubcategoryName", st.StringType(), True),
             st.StructField("SpanishProductSubcategoryName", st.StringType(), True),
             st.StructField("FrenchProductSubcategoryName", st.StringType(), True)
@@ -42,7 +42,7 @@ def test_get_product_subcategory(spark):
                 1,
                 1,
                 "english_name_1",
-                "spanish_1",
+                "spanish_name_1",
                 "french_name_1"
             )
         ],

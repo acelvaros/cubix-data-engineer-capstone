@@ -11,9 +11,9 @@ def test_get_products(spark):
     test_data = spark.createDataFrame(
         [
             # include - samle to keep
-            ("1", "1", "name_1", "10.1111", "12.1111", "14.1111", "color_1", "40", "N/A", "1.6543", "nameofmodel_1", "500", "desc_1", "extra_col"), # noqa: E501
+            ("1", "1", "name_1", "10.1111", "12.1111", "14.1111", "color_1", "40", "N/A", "1.6543", "nameofmodel_1", "500", "desc_1", "extra_value"), # noqa: E501
             # exclude - duplicate
-            ("1", "1", "name_1", "10.1111", "12.1111", "14.1111", "color_1", "40", "N/A", "1.6543", "nameofmodel_1", "500", "desc_1", "extra_col"), # noqa: E501
+            ("1", "1", "name_1", "10.1111", "12.1111", "14.1111", "color_1", "40", "N/A", "1.6543", "nameofmodel_1", "500", "desc_1", "extra_value"), # noqa: E501
         ],
         schema=[
             "pk",
