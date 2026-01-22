@@ -8,12 +8,12 @@ CUSTOMERS_MAPPING = {
     "ms": "MaritalStatus",
     "gender": "Gender",
     "income": "YearlyIncome",
-    "childrenhome": "NumberChildren",
+    "childrenhome": "NumberChildrenAtHome",
     "occ": "Occupation",
     "hof": "HouseOwnerFlag",
     "nco": "NumberCarsOwned",
-    "addr1": "AddresLine1",
-    "addr2": "AddresLine2",
+    "addr1": "AddressLine1",
+    "addr2": "AddressLine2",
     "phone": "Phone"
 }
 
