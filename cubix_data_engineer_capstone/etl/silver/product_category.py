@@ -9,15 +9,15 @@ PRODUCT_CATEGORY_MAPPING = {
     "fpcn": "FrenchProductCategoryName"
 }
 
-def get_product_category(product_category_raw: DataFrame) -> DataFrame:
+def get_product_category(products_category_raw: DataFrame) -> DataFrame:
     """Map and filter Product Subcategory data.
 
     :param product_category_raw: Raw Product Subcategory data.
     :return: Mapped and filtered Product Subcategory data.
     """
-    # Select and cast the columns
-    product_category_mapped = (
-        product_category_raw
+
+    return(
+        products_category_raw
         .select(
             sf.col("pck").cast("int"),
             sf.col("pcak").cast("int"),
@@ -25,11 +25,6 @@ def get_product_category(product_category_raw: DataFrame) -> DataFrame:
             sf.col("spcn"),
             sf.col("fpcn")
         )
+        .withColumnsRenamed(PRODUCT_CATEGORY_MAPPING)
+        .dropDuplicates()
     )
-
-    # Apply the column renaming
-    for old_name, new_name in PRODUCT_CATEGORY_MAPPING.items():
-        product_category_mapped = product_category_mapped.withColumnRenamed(old_name, new_name)
-
-    # Drop duplicates
-    return product_category_mapped.dropDuplicates()

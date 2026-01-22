@@ -17,7 +17,22 @@ def get_sales(sales_raw: DataFrame) -> DataFrame:
     :return:            Mapped and filtered Sales data.
 
     """
+    return(
+        sales_raw
+        .select(
+            sf.col("son"),
+            sf.col("orderdate").cast("date"),
+            sf.col("pk").cast("int"),
+            sf.col("ck").cast("int"),
+            sf.col("dateofshipping").cast("date"),
+            sf.col("oquantity").cast("int")
+        )
+        .withColumnsRenamed(SALES_MAPPING)
+        .dropDuplicates()
+    )
 
+
+"""
     # Select and cast the columns
     sales_mapped = (
         sales_raw
@@ -37,3 +52,4 @@ def get_sales(sales_raw: DataFrame) -> DataFrame:
 
     # Drop duplicates
     return sales_mapped.dropDuplicates()
+"""

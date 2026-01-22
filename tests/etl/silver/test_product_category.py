@@ -1,5 +1,3 @@
-from decimal import Decimal
-
 import pyspark.sql.types as st
 import pyspark.testing as spark_testing
 from cubix_data_engineer_capstone.etl.silver.product_category import get_product_category

@@ -1,8 +1,7 @@
-from decimal import Decimal
-
 import pyspark.sql.types as st
 import pyspark.testing as spark_testing
 from cubix_data_engineer_capstone.etl.silver.products import get_products
+from decimal import Decimal
 
 def test_get_products(spark):
     """
@@ -12,9 +11,9 @@ def test_get_products(spark):
     test_data = spark.createDataFrame(
         [
             # include - samle to keep
-            ("1", "1", "name_1", "10.1111", "12.1111", "14.1111", "color_1", "40", "N/A", "1.6543", "nameofmodel_1", "500", "desc_1", "extra_value"), # noqa: E501
+            ("1", "1", "name_1", "10.1111", "12.1111", "14.1111", "color_1", "40", "N/A", "1.6543", "nameofmodel_1", "500", "desc_1", "extra_col"), # noqa: E501
             # exclude - duplicate
-            ("1", "1", "name_1", "10.1111", "12.1111", "14.1111", "color_1", "40", "N/A", "1.6543", "nameofmodel_1", "500", "desc_1", "extra_value"), # noqa: E501
+            ("1", "1", "name_1", "10.1111", "12.1111", "14.1111", "color_1", "40", "N/A", "1.6543", "nameofmodel_1", "500", "desc_1", "extra_col"), # noqa: E501
         ],
         schema=[
             "pk",
@@ -45,8 +44,8 @@ def test_get_products(spark):
             st.StructField("DealerPrice", st.DecimalType(10, 2), True),
             st.StructField("ListPrice", st.DecimalType(10, 2), True),
             st.StructField("Color", st.StringType(), True),
-            st.StructField("Size", st.StringType(), True),
-            st.StructField("Range", st.StringType(), True),
+            st.StructField("Size", st.IntegerType(), True),
+            st.StructField("SizeRange", st.StringType(), True),
             st.StructField("Weight", st.DecimalType(10, 2), True),
             st.StructField("ModelName", st.StringType(), True),
             st.StructField("SafetyStockLevel", st.IntegerType(), True),
@@ -54,7 +53,7 @@ def test_get_products(spark):
             st.StructField("ProfitMargin", st.DecimalType(10, 2), True)
         ]
     )
-
+       
     excpected = spark.createDataFrame(
         [
             (

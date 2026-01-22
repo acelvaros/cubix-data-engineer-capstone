@@ -1,7 +1,58 @@
 from pyspark.sql import functions as sf
 from pyspark.sql import DataFrame
-from decimal import Decimal
+from pyspark.sql.types import DecimalType
 
+PRODUCTS_MAPPING= {
+    "pk": "ProductKey",
+    "psck": "ProductSubCategoryKey",
+    "name": "ProductName",
+    "stancost": "StandardCost",
+    "dealerprice": "DealerPrice",
+    "listprice": "ListPrice",
+    "color": "Color",
+    "size": "Size",
+    "range": "SizeRange",
+    "weight": "Weight",
+    "nameofmodel": "ModelName",
+    "ssl": "SafetyStockLevel",
+    "desc": "Description"
+}
+
+def get_products(products_raw: DataFrame) -> DataFrame:
+    """Transform and filter Products data.
+    1. Select needed columns, and cast data types.
+    2. Rename columns according to mapping.
+    3. Create "ProfitMargin".
+    4. Replace "NA" values with None.
+    5. Drop duplicates.
+    :param products_raw: Raw Products data
+    :return:             Cleaned, filtered, and transformed Products data.
+    """
+
+    return(
+        products_raw
+        .select(
+            sf.col("pk").cast("int"),
+            sf.col("psck").cast("int"),
+            sf.col("name"),
+            sf.col("stancost").cast(DecimalType(10, 2)).alias("stancost"),
+            sf.col("dealerprice").cast(DecimalType(10, 2)).alias("dealerprice"),
+            sf.col("listprice").cast(DecimalType(10, 2)).alias("listprice"),
+            sf.col("color"),
+            sf.col("size").cast("int"),
+            sf.col("range"),
+            sf.col("weight").cast(DecimalType(10, 2)).alias("weight"),
+            sf.col("nameofmodel"),
+            sf.col("ssl").cast("int"),
+            sf.col("desc")
+        )
+        .withColumnsRenamed(PRODUCTS_MAPPING)
+            .withColumn("ProfitMargin", sf.col("ListPrice") - sf.col("DealerPrice").cast(DecimalType(10, 2)))          
+            .replace("N/A", None)
+        .dropDuplicates()
+    )
+
+"""
 PRODUCTS_MAPPING = {
     "pk": "ProductKey",
     "psck": "ProductSubCategoryKey",
@@ -20,11 +71,12 @@ PRODUCTS_MAPPING = {
 }
 
 def get_products(products_raw: DataFrame) -> DataFrame:
-    """Map and filter Products data.
-
-    :param products_raw: Raw Products data.
-    :return: Mapped and filtered Products data.
-    """
+    #
+    # Map and filter Products data.
+    #
+    #:param products_raw: Raw Products data.
+    #:return: Mapped and filtered Products data.
+    #
     # Select and cast the columns
     products_mapped = (
         products_raw
@@ -53,3 +105,4 @@ def get_products(products_raw: DataFrame) -> DataFrame:
 
     # Drop duplicates
     return products_mapped.dropDuplicates()
+"""

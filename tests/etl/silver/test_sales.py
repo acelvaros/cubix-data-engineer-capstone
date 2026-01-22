@@ -36,7 +36,7 @@ def test_get_sales(spark):
             st.StructField("ProductKey",  st.IntegerType(), True),
             st.StructField("CustomerKey",  st.IntegerType(), True),
             st.StructField("ShipDate", st.DateType(), True),
-            st.StructField("OrderQuantity", st.IntegerType(), True),
+            st.StructField("OrderQuantity", st.IntegerType(), True)
         ]
     )
 
