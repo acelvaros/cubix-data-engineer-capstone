@@ -11,11 +11,11 @@ def test_join_master_tables(spark):
     Positive test that the function _join_master_tables returns the expected DataFrame
     """
     sales_master_test_data = [
-        ("5001", datetime(2017, 1, 1), 2, 3)
+        ("SO01", datetime(2017, 1, 1), 2, 3)
     ]
     sales_schema = st.StructType([
             st.StructField("SalesOrderNumber", st.StringType(), True),
-            st.StructField("OrderDate", st.TimestampType(), True),
+            st.StructField("OrderDate", st.DateType(), True),
             st.StructField("CustomerKey", st.IntegerType(), True),
             st.StructField("ProductKey", st.IntegerType(), True)
     ])
@@ -25,7 +25,7 @@ def test_join_master_tables(spark):
         (datetime(2017, 1, 1), "Monday")
     ]
     calendar_schema = st.StructType([
-            st.StructField("Date", st.TimestampType(), True),
+            st.StructField("Date", st.DateType(), True),
             st.StructField("DayName", st.StringType(), True)
     ])
     calendar_master_test = spark.createDataFrame(
@@ -95,7 +95,7 @@ def test_join_master_tables(spark):
             st.StructField("ProductKey", st.IntegerType(), True),
             st.StructField("CustomerKey", st.IntegerType(), True),
             st.StructField("SalesOrderNumber", st.StringType(), True),
-            st.StructField("OrderDate", st.TimestampType(), True),
+            st.StructField("OrderDate", st.DateType(), True),
             st.StructField("DayName", st.StringType(), True),
             st.StructField("Name", st.StringType(), True),
             st.StructField("ProductSubcategoryKey", st.IntegerType(), True),
@@ -109,7 +109,7 @@ def test_join_master_tables(spark):
         (
             3,
             2,
-            "5001",
+            "SO01",
             datetime(2017, 1, 1),
             "Monday",
             "John Doe",
@@ -122,5 +122,71 @@ def test_join_master_tables(spark):
     ]
 
     expected = spark.createDataFrame(excepted_data, schema=excepted_schema)
+
+    spark_testing.assertDataFrameEqual(result, expected)
+
+# Mocking  testing module
+@patch("cubix_data_engineer_capstone.etl.gold.wide_sales._join_master_tables")
+def test_get_wide_sales(mock_join_master_tables, spark, some_df):  
+    """
+    
+    """
+    mock_joined_master_dfs_data = [
+        ("SO01", 2, Decimal("10.00"), Decimal("15.00"), 1, 0)
+    ]
+    
+    mock_join_master_dfs_schema = st.StructType([
+            st.StructField("SalesOrderNumber", st.StringType(), True),
+            st.StructField("OrderQuantity", st.IntegerType(), True),
+            st.StructField("StandardCost", st.DecimalType(10, 2), True),
+            st.StructField("ListPrice", st.DecimalType(10, 2), True),
+            st.StructField("MaritalStatus", st.IntegerType(), True),
+            st.StructField("Gender", st.IntegerType(), True),
+    ])
+
+    mock_joined_master_dfs = spark.createDataFrame(
+        mock_joined_master_dfs_data,
+        mock_join_master_dfs_schema
+    )
+
+    mock_join_master_tables.return_value = mock_joined_master_dfs
+
+    # gettin any results, defined in conftest
+    result = get_wide_sales(
+        sales_master=some_df,
+        calendar_master=some_df,
+        customers_master=some_df,
+        products_master=some_df,
+        product_subcategory_master=some_df,
+        product_category_master=some_df
+    )
+
+    expected_schema = st.StructType([
+            st.StructField("SalesOrderNumber", st.StringType(), True),
+            st.StructField("OrderQuantity", st.IntegerType(), True),
+            st.StructField("StandardCost", st.DecimalType(10, 2), True),
+            st.StructField("ListPrice", st.DecimalType(10, 2), True),
+            st.StructField("MaritalStatus", st.StringType(), True),
+            st.StructField("Gender", st.StringType(), True),
+            st.StructField("SalesAmount", st.DecimalType(10, 2), True),
+            st.StructField("HighValueOrder", st.BooleanType(), True),
+            st.StructField("Profit", st.DecimalType(10, 2), True)
+    ])
+
+    expected_data = [
+        (
+            "SO01",
+            2,
+            Decimal("10.00"),
+            Decimal("15.00"),
+            "Married",
+            "Female",
+            Decimal("30.00"),
+            False,
+            Decimal("10.00")
+        )
+    ]
+
+    expected = spark.createDataFrame(expected_data, expected_schema) 
 
     spark_testing.assertDataFrameEqual(result, expected)
