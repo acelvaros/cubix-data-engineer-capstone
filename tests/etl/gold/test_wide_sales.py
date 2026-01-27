@@ -125,11 +125,25 @@ def test_join_master_tables(spark):
 
     spark_testing.assertDataFrameEqual(result, expected)
 
-# Mocking  testing module
+# Mocking testing module
 @patch("cubix_data_engineer_capstone.etl.gold.wide_sales._join_master_tables")
 def test_get_wide_sales(mock_join_master_tables, spark, some_df):  
     """
-    
+    Unit test for the `get_wide_sales` function in the gold ETL layer.
+
+    This test mocks the `_join_master_tables` function to return a predefined DataFrame,
+    simulating the joined master tables. It then calls `get_wide_sales` with mock input DataFrames
+    and verifies that the resulting DataFrame matches the expected schema and data, including
+    correct transformation of marital status and gender codes to strings, calculation of sales amount,
+    high value order flag, and profit.
+
+    Args:
+        mock_join_master_tables: Mocked version of the `_join_master_tables` function.
+        spark: SparkSession fixture for creating test DataFrames.
+        some_df: Fixture providing a generic DataFrame for input arguments.
+
+    Asserts:
+        The output DataFrame from `get_wide_sales` matches the expected DataFrame in both schema and content.
     """
     mock_joined_master_dfs_data = [
         ("SO01", 2, Decimal("10.00"), Decimal("15.00"), 1, 0)
