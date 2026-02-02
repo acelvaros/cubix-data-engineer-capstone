@@ -2,6 +2,7 @@ from delta.tables import DeltaTable     # type: ignore
 from pyspark.sql import DataFrame, SparkSession
 
 """
+# Pro only
 from cubix_data_engineer_capstone.utils.config import STORAGE_ACCOUNT_NAME
 
 def scd1(spark: SparkSession, container_name: str, file_path: str, new_data: DataFrame, primary_key: str):
