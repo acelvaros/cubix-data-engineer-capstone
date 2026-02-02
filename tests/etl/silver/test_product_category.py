@@ -5,6 +5,12 @@ from cubix_data_engineer_capstone.etl.silver.product_category import get_product
 def test_get_product_category(spark):
     """
     Positive test that the function get_product_category returns the expected DataFrame
+
+    Step-by-step phases:
+    1. Create a test DataFrame with sample product category data, including duplicates and extra columns.
+    2. Call the get_product_category function with the test DataFrame as input.
+    3. Define the expected schema and expected DataFrame (with duplicates removed and correct types/columns).
+    4. Assert that the result matches the expected DataFrame using spark_testing.assertDataFrameEqual.
     """
 
     test_data = spark.createDataFrame(
@@ -16,8 +22,7 @@ def test_get_product_category(spark):
             # include - unmodified values
             ("2", "Components", "Componente", "Composant", "extra_value"),
             ("3", "Clothing", "Prenda", "Vêtements", "extra_value"),
-            ("4", "Accessories", "Accesorio", "Accessoire", "extra_value"),
-
+            ("4", "Accessories", "Accesorio", "Accessoire", "extra_value")
         ],
         schema=[
             "pck",

@@ -8,6 +8,18 @@ from cubix_data_engineer_capstone.etl.gold.daily_product_category_metrics import
 def test_get_daily_product_category_metrics(spark):
     """
     Positive test that the function get_daily_product_category_metrics returns the expected DataFrame.
+
+    Step-by-step phases for the test(s) in this file:
+    1. Prepare a sample input DataFrame (mock or fixture) representing wide sales data.
+    2. Call the get_daily_product_category_metrics function with the sample input.
+    3. Collect the resulting DataFrame output.
+    4. Assert that the output DataFrame contains the expected columns and values:
+        - "SalesAmountSum"
+        - "SalesAmountAvg"
+        - "ProfitSum"
+        - "ProfitAvg"
+    5. Optionally, check for correct grouping by "EnglishProductCategoryName" and correct rounding of averages.
+    6. Validate that the function handles edge cases (e.g., empty input, missing columns) if such tests are present.   
     """
 
     wide_sales_test_data = [
