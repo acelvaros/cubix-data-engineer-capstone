@@ -10,7 +10,7 @@ def test_get_daily_product_category_metrics(spark):
     Positive test that the function get_daily_product_category_metrics returns the expected DataFrame.
 
     Step-by-step phases for the test(s) in this file:
-    1. Prepare a sample input DataFrame (mock or fixture) representing wide sales data.
+    1. Prepare a sample input DataFrame (mock or fixture) representing product category data.
     2. Call the get_daily_product_category_metrics function with the sample input.
     3. Collect the resulting DataFrame output.
     4. Assert that the output DataFrame contains the expected columns and values:
@@ -22,21 +22,21 @@ def test_get_daily_product_category_metrics(spark):
     6. Validate that the function handles edge cases (e.g., empty input, missing columns) if such tests are present.   
     """
 
-    wide_sales_test_data = [
+    product_category_test_data = [
         ("product_1", Decimal("10.00"), Decimal("20.00")),
         ("product_1", Decimal("16.00"), Decimal("26.00")),
         ("product_1", Decimal("10.00"), Decimal("20.00")),
         ("product_2", Decimal("20.00"), Decimal("40.00")),
         ("product_2", Decimal("60.00"), Decimal("80.00")),
     ]
-    wide_sales_test_schema = st.StructType([
+    product_category_test_schema = st.StructType([
         st.StructField("EnglishProductCategoryName", st.StringType(), True),
         st.StructField("SalesAmount", st.DecimalType(10, 2), True),
         st.StructField("Profit", st.DecimalType(10, 2), True),
     ])
-    wide_sales_test = spark.createDataFrame(wide_sales_test_data, schema=wide_sales_test_schema)
+    product_category_test = spark.createDataFrame(product_category_test_data, schema=product_category_test_schema)
 
-    result = get_daily_product_category_metrics(wide_sales_test)
+    result = get_daily_product_category_metrics(product_category_test)
 
     expected_schema = st.StructType([
         st.StructField("EnglishProductCategoryName", st.StringType(), True),
