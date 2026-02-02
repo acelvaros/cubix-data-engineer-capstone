@@ -6,7 +6,14 @@ def get_daily_product_category_metrics(wide_sales: DataFrame) -> DataFrame:
     """
     Calculates daily product category metrics from the wide_sales DataFrame.
 
-    Note: In order to get only two decimals for the averages, value is rounded.
+    Step-by-step phases:
+    1. Group the input DataFrame by "EnglishProductCategoryName".
+    2. Aggregate the following metrics for each group:
+        - Sum of "SalesAmount" as "SalesAmountSum"
+        - Average of "SalesAmount" (rounded to 2 decimals) as "SalesAmountAvg"
+        - Sum of "Profit" as "ProfitSum"
+        - Average of "Profit" (rounded to 2 decimals) as "ProfitAvg"
+    3. Return the resulting DataFrame with the aggregated metrics.
 
     :param wide_sales:  Input DataFrame containing wide sales data.
     :return:            DataFrame with daily metrics including "SalesAmountSum", "SalesAmountAvg",
