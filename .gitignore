@@ -3,5 +3,5 @@
 dist/
 .venv/
 **/__pycache__/
-.vscode
+.vscode/
 *bup.*

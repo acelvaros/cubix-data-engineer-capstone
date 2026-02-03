@@ -1,4 +1,4 @@
-from cubix_data_engineer_capstone.utils.datalake import read_file_from_datalake, write_file_to_datalake
+from cubix_data_engineer_capstone.utils.datalake_bup import read_file_from_datalake, write_file_to_datalake
 
 def bronze_ingest(
     source_path: str,
