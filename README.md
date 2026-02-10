@@ -271,7 +271,17 @@ spark.sql('SELECT * FROM my_table WHERE ...')
 - **Snowflake:** Normalized dimensions, more joins, less redundancy
 - **Fact Table:** Quantitative data (e.g., sales)
 - **Dimension Table:** Descriptive data (e.g., product, customer)
-- **SCD2 ETL:** Handles changes in dimension data, preserves history
+
+
+### SCD types
+
+- **SCD0 (Passive):** No changes allowed after initial load; data is static and never updated.
+- **SCD1 (Overwrite):** Overwrites old data with new data, so only the current value is kept. No history is preserved. Used when only the latest state is needed.
+- **SCD2 (Full History):** Handles changes in dimension data by creating new records for each change, preserving full history. Each record is versioned (e.g., with effective dates or flags).
+- **SCD3 (Limited History):** Tracks limited history by adding new columns for previous values (e.g., previous and current address), allowing comparison of recent changes but not full history.
+- **SCD4 (History Table):** Maintains a separate history table to track all changes, while the main dimension table holds only the current value.
+- **SCD5 (Mini-Dimension):** Combines SCD1 or SCD2 with a mini-dimension for rapidly changing attributes, reducing the size of the main dimension table.
+- **SCD6 (Hybrid):** Combines SCD1, SCD2, and SCD3 to provide both full and limited history, using additional columns and versioning to track changes in multiple ways.
 
 ### Poetry & Git, Python Packaging, Unit Tests
 
