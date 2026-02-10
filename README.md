@@ -127,9 +127,25 @@ After making changes, update and build your package:
 4. Run Notebooks/scripts
 
 
-## Medallion architecture
+
+## Medallion Architecture
+
+The Medallion architecture is a layered approach to organizing data pipelines for quality, governance, and scalability. It consists of three main layers:
+
+- **Bronze Layer:** Raw data ingestion, storing unprocessed data as received from source systems. This layer acts as the single source of truth, capturing all incoming data with minimal transformation. It enables traceability and reprocessing if needed.
+- **Silver Layer:** Cleansed and conformed data, where business rules, deduplication, and standardization are applied. This layer prepares data for analytics and reporting by ensuring consistency and quality. In this project, the Silver layer implements the SCD1 (Slowly Changing Dimension Type 1) concept, meaning dimension tables always reflect the latest state of the data, overwriting previous values without preserving history.
+- **Gold Layer:** Aggregated and business-level data, optimized for analytics, dashboards, and reporting. This layer contains curated datasets and key business metrics, ready for consumption by end users and BI tools.
+
+This project is based on the SCD1 concept, ensuring that dimension tables always show the most current information, with changes overwriting previous values.
 
 ### ETL Bronze Layer
+
+The `etl/bronze` layer is responsible for ingesting raw data from various source systems and storing it in its original form. The main purpose of the Bronze layer is to:
+- Capture all incoming data with minimal or no transformation
+- Preserve the original structure and content for traceability and auditing
+- Enable reprocessing and recovery in case of downstream errors
+
+This layer acts as the foundation for all subsequent data processing, ensuring that the pipeline can always be rebuilt from the raw source data if needed.
 
 ### ETL Silver Layer
 
@@ -169,9 +185,15 @@ or manually within a poetry shell:
 pytest .\test_<entities>.py
 
 
+
 ### ETL Gold Layer
 
-- **wide_sales.py**: Joins all master data tables (sales, calendar, customers, products, product subcategory, product category) into a single wide fact table for analytics. It enriches sales data with descriptive attributes, converts coded fields (marital status, gender) to human-readable values, and calculates key business metrics such as SalesAmount, HighValueOrder flag, and Profit. This wide table is ideal for reporting and business intelligence use cases.
+The `etl/gold` layer produces business-level, analytics-ready datasets by aggregating, joining, and enriching data from the Silver layer. The main purpose of the Gold layer is to:
+- Provide curated, high-value datasets for reporting, dashboards, and advanced analytics
+- Calculate key business metrics and KPIs
+- Join and enrich fact tables with descriptive attributes from dimension tables
+
+For example, `wide_sales.py` joins all master data tables (sales, calendar, customers, products, product subcategory, product category) into a single wide fact table, adding business logic and calculated fields. This enables fast, reliable analytics and supports business intelligence use cases.
 
 #### Unit Testing for Gold Layer
 
