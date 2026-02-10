@@ -6,9 +6,11 @@ This project demonstrates a full-stack data engineering pipeline using modern to
 
 - **Purpose:** End-to-end data engineering pipeline for sales and product analytics
 - **Technologies:** Python, PySpark, Delta Lake, Azure Data Lake, Poetry, Git, Databricks
-- **Concepts:** Medallion architecture (Bronze/Silver/Gold), Slowly Changing Dimensions (SCD2), star and snowflake schemas, CI/CD, unit testing
+- **Concepts:** Medallion architecture (Bronze/Silver/Gold), Slowly Changing Dimensions (SCD1), star and snowflake schemas, CI/CD, unit testing
 
-## Folder Structure
+## Prerequisites and installation guiadance
+
+### Folder Structure
 
 ```
 cubix_data_engineer_capstone/
@@ -28,7 +30,7 @@ cubix_data_engineer_capstone/
 ```
 
 
-## Apache Spark – Installing PySpark on Windows
+### Apache Spark – Installing PySpark on Windows
 
 1. Create a folder called `spark` on your C: drive (`C:\spark`).
 2. Install Java 8. Important: If you already have Java (check with `java -version` in cmd), and it is installed in `Program Files (x86)`, uninstall it and reinstall under `C:\spark\java` (to avoid issues with spaces in the path).
@@ -56,7 +58,7 @@ Click on “OK” to close all windows for the Enviroment Variables.
 8. Open a cmd, and type “spark-shell”, if you see similar things, then you’re good to go. If you get an error “spark-shell is not a recognizable command” then maybe you haven’t saved the Environment Variables, check them, and add them again if needed.
 
 
-## Setting Up Your Development Environment
+### Setting Up Your Development Environment
 
 Follow these steps to prepare your workspace for development:
 
@@ -104,7 +106,7 @@ Follow these steps to prepare your workspace for development:
 
 ---
 
-## Building and Publishing a New Version
+### Building and Publishing a New Version
 
 After making changes, update and build your package:
 
@@ -120,14 +122,16 @@ After making changes, update and build your package:
 	```
 	This creates a `.whl` file in the `dist/` directory, ready for upload to Databricks or PyPI.
 
+3. Upload the generated `.whl` file to Databricks into your workspace manually (or see `upload_latest_whl.ps1`) and install them in Serverless ipynb notebooks
 
-## ETL Gold Layer: wide_sales.py
+4. Run Notebooks/scripts
 
-- **wide_sales.py**: Joins all master data tables (sales, calendar, customers, products, product subcategory, product category) into a single wide fact table for analytics. It enriches sales data with descriptive attributes, converts coded fields (marital status, gender) to human-readable values, and calculates key business metrics such as SalesAmount, HighValueOrder flag, and Profit. This wide table is ideal for reporting and business intelligence use cases.
 
-## Unit Testing for Gold Layer
+## Medallion architecture
 
-- **test_wide_sales.py**: Contains unit tests for the gold ETL logic. It verifies that the join logic in wide_sales.py produces the correct schema and data, and that all calculated and transformed fields (including business metrics and human-readable fields) are correct. The tests use both direct DataFrame comparisons and mocking to ensure robust, isolated validation of the transformation logic.
+### ETL Bronze Layer
+
+### ETL Silver Layer
 
 The `etl/silver` folder contains transformation logic for key business entities:
 
@@ -138,9 +142,11 @@ The `etl/silver` folder contains transformation logic for key business entities:
 - **sales.py**: Maps and filters sales transaction data, casting and renaming columns, and removing duplicates to ensure a clean fact table for sales analytics.
 - **scd.py**: Implements Slowly Changing Dimension (SCD) Type 1 logic using Delta Lake. Efficiently merges new data into master Delta tables, updating changed records and inserting new ones, ensuring dimension tables reflect the latest state without preserving history.
 
-## Unit Testing for Silver Layer
+#### Unit Testing for Silver Layer
 
-Unit tests in `tests/etl/silver/` validate the transformation logic for each entity:
+Unit tests in `tests/etl/silver/` validate the transformation logic for each entity.
+
+Entities:
 
 - **test_calendar.py**: Verifies correct schema, type casting, and deduplication for calendar data.
 - **test_customers.py**: Checks column mapping, derived fields, and duplicate removal for customer data.
@@ -150,54 +156,62 @@ Unit tests in `tests/etl/silver/` validate the transformation logic for each ent
 
 These tests use PySpark's testing utilities to assert DataFrame equality and schema correctness, ensuring robust, production-ready transformations.
 
+## Running Tests
+
+Run test with command:
+
+```sh
+poetry run pytest .\test_<entities>.py
+```
+
+or manually within a poetry shell:
+
+pytest .\test_<entities>.py
+
+
+### ETL Gold Layer
+
+- **wide_sales.py**: Joins all master data tables (sales, calendar, customers, products, product subcategory, product category) into a single wide fact table for analytics. It enriches sales data with descriptive attributes, converts coded fields (marital status, gender) to human-readable values, and calculates key business metrics such as SalesAmount, HighValueOrder flag, and Profit. This wide table is ideal for reporting and business intelligence use cases.
+
+#### Unit Testing for Gold Layer
+
+- **test_wide_sales.py**: Contains unit tests for the gold ETL logic. It verifies that the join logic in wide_sales.py produces the correct schema and data, and that all calculated and transformed fields (including business metrics and human-readable fields) are correct. The tests use both direct DataFrame comparisons and mocking to ensure robust, isolated validation of the transformation logic.
+
+
 ## Notebooks Overview
 
 - **01_prepare_the_pipeline.ipynb**: Sets up the Databricks environment, installs the project package, and creates required catalogs, schemas, and volumes in the lakehouse. This notebook is the foundation for the pipeline, ensuring all storage and metadata structures are in place before data ingestion.
 - **02_ingestion_pipeline.ipynb**: Demonstrates the end-to-end ingestion and transformation process. It imports ETL functions, reads raw data, applies bronze/silver/gold transformations, and writes results to the lakehouse. This notebook is a practical guide for running the pipeline and validating each stage interactively in Databricks.
+- **03_homework_ingestion_pipeline.ipynb**: Contains the whole data ingestion process from initial load via the 3 following batches and wrting the final results to a parquet file
 
-1. Install dependencies with Poetry:
-	```sh
-	poetry install
-	```
-2. Package the project:
-	```sh
-	poetry build
-	```
-3. Upload the generated `.whl` file to Databricks (see `upload_latest_whl.ps1`).
-4. Attach the wheel to your Databricks cluster and run notebooks/scripts.
+## Appendix - Spark, Pyspark general information and SQL basics / DWH concepts
 
-## Running Tests
-
-```sh
-poetry run pytest
-```
-
-## Spark: Advantages & Architecture
+### Spark: Advantages & Architecture
 
 - Distributed, in-memory computation for big data
 - Handles batch and streaming data
 - Fault-tolerant, scalable, supports SQL, Python, R, Scala
 - Medallion architecture: Bronze (raw) → Silver (cleaned) → Gold (aggregated)
 
-## Parquet & Delta Tables
+### Parquet & Delta Tables
 
 - Parquet: Columnar, compressed, efficient for analytics
 - Delta Lake: ACID transactions, schema enforcement, time travel, scalable upserts
 - Treat Parquet/Delta as queryable tables for fast, reliable analytics
 
-## Spark UI for Debugging
+### Spark UI for Debugging
 
 - Use Spark UI to monitor jobs, stages, and tasks
 - Identify slow operations, data skews, and code bottlenecks
 - Helps eliminate vulnerabilities like OOM errors, inefficient joins, and shuffles
 
-## PySpark vs SQL vs Pandas
+### PySpark vs SQL vs Pandas
 
 - **PySpark:** Distributed, scalable, handles large datasets
 - **SQL:** Declarative, easy for analytics, supported in Spark SQL
 - **Pandas:** In-memory, best for small/medium data, not distributed
 
-## Handling Parquet Files as Tables
+### Handling Parquet Files as Tables
 
 ```python
 df = spark.read.parquet('path/to/file.parquet')
@@ -205,8 +219,9 @@ df.createOrReplaceTempView('my_table')
 spark.sql('SELECT * FROM my_table WHERE ...')
 ```
 
-## SQL Basics (Examples)
-### Most Important SQL Query Types and Clauses
+### SQL Basics (Examples)
+
+#### Most Important SQL Query Types and Clauses
 
 - **SELECT**: Retrieve data from one or more tables
 - **WHERE**: Filter rows based on conditions
@@ -222,13 +237,13 @@ spark.sql('SELECT * FROM my_table WHERE ...')
 - **DISTINCT**: Remove duplicate rows from results
 - **LIMIT/OFFSET**: Restrict the number of rows returned
 
-## Data Engineering Concepts
+### Data Engineering Concepts
 
 - **Data Lake:** Stores raw, semi-structured, and structured data; flexible, scalable
 - **Data Warehouse:** Structured, optimized for analytics, strict schema
 - **Medallion Architecture:** Layered approach for data quality and governance
 
-## Star vs Snowflake Schema
+### Star vs Snowflake Schema
 
 - **Star:** Fact table at center, denormalized dimension tables
 - **Snowflake:** Normalized dimensions, more joins, less redundancy
@@ -236,14 +251,16 @@ spark.sql('SELECT * FROM my_table WHERE ...')
 - **Dimension Table:** Descriptive data (e.g., product, customer)
 - **SCD2 ETL:** Handles changes in dimension data, preserves history
 
-## Poetry & Git, Python Packaging, Unit Tests
+### Poetry & Git, Python Packaging, Unit Tests
 
 - Use Poetry for dependency management and packaging
 - Git for version control and collaboration
 - Write unit tests in `tests/` to ensure code quality
 
-## CI/CD, Code Review, Databricks Pipeline
+### CI/CD, Code Review, Databricks Pipeline
 
 - Use CI/CD (e.g., GitHub Actions) for automated testing and deployment
 - Code review for quality and security
 - Deploy final package to Databricks for production pipelines
+
+deployment.yaml for reference only, is currently disabled as it is not functioning in Free Edition
