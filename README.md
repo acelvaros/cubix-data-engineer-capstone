@@ -204,7 +204,7 @@ For example, `wide_sales.py` joins all master data tables (sales, calendar, cust
 
 - **01_prepare_the_pipeline.ipynb**: Sets up the Databricks environment, installs the project package, and creates required catalogs, schemas, and volumes in the lakehouse. This notebook is the foundation for the pipeline, ensuring all storage and metadata structures are in place before data ingestion.
 - **02_ingestion_pipeline.ipynb**: Demonstrates the end-to-end ingestion and transformation process. It imports ETL functions, reads raw data, applies bronze/silver/gold transformations, and writes results to the lakehouse. This notebook is a practical guide for running the pipeline and validating each stage interactively in Databricks.
-- **03_homework_ingestion_pipeline.ipynb**: Contains the whole data ingestion process from initial load via the 3 following batches and wrting the final results to a parquet file
+- **03_homework_ingestion_pipeline.ipynb**: Contains the whole data ingestion process from initial load via the 3 following batches and writing the final results to a parquet file
 
 ## Appendix - Spark, Pyspark general information and SQL basics / DWH concepts
 
