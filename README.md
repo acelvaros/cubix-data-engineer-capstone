@@ -34,8 +34,8 @@ cubix_data_engineer_capstone/
 
 1. Create a folder called `spark` on your C: drive (`C:\spark`).
 2. Install Java 8. Important: If you already have Java (check with `java -version` in cmd), and it is installed in `Program Files (x86)`, uninstall it and reinstall under `C:\spark\java` (to avoid issues with spaces in the path).
-3. Download Spark (choose a version matching your Hadoop version, e.g., 3.3+).
-4. Download Hadoop winutils: Go to the winutils GitHub page, click "Code" > "Download ZIP". Extract only the Hadoop version folder you need (e.g., `hadoop-3.3.0`).
+3. Download Spark: https://spark.apache.org/downloads.html; (choose a version matching your Hadoop version, e.g., 3.3+).
+4. Download Hadoop winutils: https://github.com/kontext-tech/winutils/tree/master; Go to the winutils GitHub page, click "Code" > "Download ZIP". Extract only the Hadoop version folder you need (e.g., `hadoop-3.3.0`).
 5. Copy the Spark and Hadoop folders to `C:\spark`. You should have:
 	- `C:\spark\hadoop-3.3.0\bin`
 	- `C:\spark\spark-3.5.2-bin-hadoop3\bin`, `conf`, `data`, etc.
